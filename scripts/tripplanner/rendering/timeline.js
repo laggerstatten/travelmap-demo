@@ -122,11 +122,11 @@ function renderCard(seg, segments) {
             label: 'Insert into Route',
             onClick: () => {
               logAction('insertQueuedSegmentClicked', {
-                segId: seg.id
+                segId: seg.id,
               });
               insertQueuedSegment(seg, card);
-            }
-          }
+            },
+          },
         ];
       } else {
         buttons = [];
@@ -234,7 +234,7 @@ function renderCard(seg, segments) {
       ...seg.overlapEmitters.flatMap((e) =>
         getOverlapResolutionOptions(seg, e.role)
       ),
-      ...getUnlockAndQueueOptions(seg)
+      ...getUnlockAndQueueOptions(seg),
     ];
 
     // Render buttons dynamically
@@ -285,7 +285,7 @@ function buildFooter(seg, buttons) {
     onClick: (c) => {
       editSegment(seg, c);
       logAction('editSegmentClicked', {});
-    }
+    },
   });
 
   //
@@ -298,7 +298,7 @@ function buildFooter(seg, buttons) {
       onClick: () => {
         deleteQueuedStop(seg);
         logAction('deleteQueuedStopClicked', {});
-      }
+      },
     });
 
     return [...buttons, ...actions];
@@ -314,7 +314,7 @@ function buildFooter(seg, buttons) {
       onClick: () => {
         movePlacedStopToQueue(seg);
         logAction('movePlacedStopToQueueClicked', {});
-      }
+      },
     });
 
     actions.push({
@@ -323,7 +323,7 @@ function buildFooter(seg, buttons) {
       onClick: () => {
         deletePlacedStop(seg);
         logAction('deletePlacedStopClicked', {});
-      }
+      },
     });
 
     return [...buttons, ...actions];
@@ -339,7 +339,7 @@ function buildFooter(seg, buttons) {
       deleteSegment(seg);
       logAction('deleteSegmentClicked', {});
       // do we need renderTimeline(syncGlobal());
-    }
+    },
   });
 
   return [...buttons, ...actions];

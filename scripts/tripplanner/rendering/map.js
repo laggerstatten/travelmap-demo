@@ -1,4 +1,3 @@
-
 //let mapReady = false; //moving to index.html
 //let pendingSegments = null;
 
@@ -7,7 +6,7 @@ function initMap() {
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v12',
     center: [-98.5, 39.8],
-    zoom: 3
+    zoom: 3,
   });
 
   mapInstance.addControl(new mapboxgl.NavigationControl(), 'top-left');
@@ -15,7 +14,7 @@ function initMap() {
   mapInstance.on('load', () => {
     mapInstance.addSource('stops', {
       type: 'geojson',
-      data: { type: 'FeatureCollection', features: [] }
+      data: { type: 'FeatureCollection', features: [] },
     });
 
     mapInstance.addLayer({
@@ -26,13 +25,13 @@ function initMap() {
         'circle-radius': 6,
         'circle-color': '#e63946',
         'circle-stroke-width': 2,
-        'circle-stroke-color': '#fff'
-      }
+        'circle-stroke-color': '#fff',
+      },
     });
 
     mapInstance.addSource('drives', {
       type: 'geojson',
-      data: { type: 'FeatureCollection', features: [] }
+      data: { type: 'FeatureCollection', features: [] },
     });
 
     mapInstance.addLayer({
@@ -41,22 +40,23 @@ function initMap() {
       source: 'drives',
       paint: {
         'line-width': 4,
-        'line-color': '#457b9d'
-      }
+        'line-color': '#457b9d',
+      },
     });
 
     mapReady = true;
 
-    if (pendingSegments) { // this seems to be a global
+    if (pendingSegments) {
+      // this seems to be a global
       renderMap(pendingSegments);
       pendingSegments = null;
     }
 
-    mapInstance.on("click", (e) => {
+    mapInstance.on('click', (e) => {
       const seg = window.currentEditorSegment;
 
       if (!seg) return;
-      if (seg.type !== "drive") return;
+      if (seg.type !== 'drive') return;
       if (!seg._waypointModeActive) return;
 
       const { lng, lat } = e.lngLat;
@@ -65,14 +65,14 @@ function initMap() {
       const list = loadSegments();
 
       // 2. Find the real segment in the list
-      const realSeg = list.find(s => s.id === seg.id);
+      const realSeg = list.find((s) => s.id === seg.id);
 
       // 3. Mutate the real segment
       realSeg.items = realSeg.items || [];
       realSeg.items.push({
-        type: "waypoint",
+        type: 'waypoint',
         name: `WP ${realSeg.items.length + 1}`,
-        coordinates: [lng, lat]
+        coordinates: [lng, lat],
       });
 
       // 4. Save the whole new structure
@@ -85,11 +85,6 @@ function initMap() {
       // 6. ALSO update the editor’s local `seg` so it stays in sync
       seg.items = realSeg.items;
     });
-
-
-
-
-
   });
 }
 
@@ -112,7 +107,7 @@ function renderMap(segs) {
         stopFeatures.push({
           type: 'Feature',
           geometry: { type: 'Point', coordinates: seg.coordinates },
-          properties: { id: seg.id, name: seg.name }
+          properties: { id: seg.id, name: seg.name },
         });
       }
     }
@@ -123,7 +118,7 @@ function renderMap(segs) {
         driveFeatures.push({
           type: 'Feature',
           geometry: geom,
-          properties: { id: seg.id }
+          properties: { id: seg.id },
         });
       }
     }
@@ -131,12 +126,12 @@ function renderMap(segs) {
 
   mapInstance.getSource('stops').setData({
     type: 'FeatureCollection',
-    features: stopFeatures
+    features: stopFeatures,
   });
 
   mapInstance.getSource('drives').setData({
     type: 'FeatureCollection',
-    features: driveFeatures
+    features: driveFeatures,
   });
 
   const all = [...stopFeatures, ...driveFeatures];
@@ -158,11 +153,10 @@ function renderMap(segs) {
 
     if (bbox[0] !== bbox[2] || bbox[1] !== bbox[3]) {
       mapInstance.fitBounds(bbox, {
-        padding: 40,      // now just a little visual cushion
+        padding: 40, // now just a little visual cushion
         maxZoom: 12,
         duration: 0,
       });
     }
   }
-
 }

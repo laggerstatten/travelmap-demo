@@ -30,7 +30,7 @@
       body {
         margin: 0;
         padding: 0;
-        font-family: "Open Sans", sans-serif;
+        font-family: 'Open Sans', sans-serif;
         overflow: hidden;
       }
 
@@ -176,7 +176,7 @@
       let marker = null;
       let lastSearchCoords = null;
       let popup = null;
-      const routeLayerId = "route-line";
+      const routeLayerId = 'route-line';
 
       // --- Supabase setup ---
       const supabase = window.supabase.createClient(
@@ -187,27 +187,27 @@
       // Fix hash fragment from GitHub OAuth
       supabase.auth.onAuthStateChange((event, session) => {
         if (
-          (event === "INITIAL_SESSION" || event === "SIGNED_IN") &&
-          window.location.hash.includes("access_token")
+          (event === 'INITIAL_SESSION' || event === 'SIGNED_IN') &&
+          window.location.hash.includes('access_token')
         ) {
           window.history.replaceState(
             {},
             document.title,
-            window.location.href.split("#")[0]
+            window.location.href.split('#')[0]
           );
         }
       });
 
-      const loginBtn = document.getElementById("login");
-      const logoutBtn = document.getElementById("logout");
-      const statusEl = document.getElementById("auth-status");
+      const loginBtn = document.getElementById('login');
+      const logoutBtn = document.getElementById('logout');
+      const statusEl = document.getElementById('auth-status');
 
       loginBtn.onclick = async () => {
         const { error } = await supabase.auth.signInWithOAuth({
-          provider: "github",
+          provider: 'github',
           options: {
             redirectTo: window.location.href,
-            auth_params: { prompt: "select_account" },
+            auth_params: { prompt: 'select_account' },
           },
         });
         if (error) console.error(error);
@@ -221,7 +221,7 @@
         if (session?.user) {
           currentUser = session.user;
           USER_ID = currentUser.id;
-          console.log("Logged in as:", USER_ID);
+          console.log('Logged in as:', USER_ID);
           loadVisited();
         } else {
           currentUser = null;
@@ -230,18 +230,18 @@
         }
 
         const loggedIn = !!currentUser;
-        loginBtn.style.display = loggedIn ? "none" : "inline-block";
-        logoutBtn.style.display = loggedIn ? "inline-block" : "none";
+        loginBtn.style.display = loggedIn ? 'none' : 'inline-block';
+        logoutBtn.style.display = loggedIn ? 'inline-block' : 'none';
         statusEl.textContent = loggedIn
           ? `Logged in as ${currentUser.user_metadata.user_name}`
-          : "Not logged in";
+          : 'Not logged in';
       });
 
       // --- Map setup ---
       mapboxgl.accessToken = MAPBOX_TOKEN;
       const map = new mapboxgl.Map({
-        container: "map",
-        style: "mapbox://styles/ericschall/clvvt5o32098a01nucx668i03",
+        container: 'map',
+        style: 'mapbox://styles/ericschall/clvvt5o32098a01nucx668i03',
         center: [-103.59, 40.67],
         zoom: 3,
       });
@@ -251,48 +251,48 @@
         accessToken: mapboxgl.accessToken,
         mapboxgl: mapboxgl,
         marker: false, // we add our own marker later
-        types: "country,region,place,postcode,locality,neighborhood",
-        placeholder: "Search location...",
+        types: 'country,region,place,postcode,locality,neighborhood',
+        placeholder: 'Search location...',
         limit: 5,
       });
 
-      geocoder.addTo("#search-box");
+      geocoder.addTo('#search-box');
 
       let originLng = null;
       let originLat = null;
 
-      const resultPanel = document.getElementById("result-panel");
-      const resultToggle = document.getElementById("result-toggle");
+      const resultPanel = document.getElementById('result-panel');
+      const resultToggle = document.getElementById('result-toggle');
 
       resultToggle.onclick = () => {
-        const isOpen = resultPanel.classList.contains("open");
+        const isOpen = resultPanel.classList.contains('open');
         if (isOpen) {
-          resultPanel.classList.remove("open");
-          resultToggle.textContent = "▲ Show Results";
+          resultPanel.classList.remove('open');
+          resultToggle.textContent = '▲ Show Results';
         } else {
-          resultPanel.classList.add("open");
-          resultToggle.textContent = "▼ Hide Results";
+          resultPanel.classList.add('open');
+          resultToggle.textContent = '▼ Hide Results';
         }
       };
 
       function openDrawer() {
-        const isOpen = resultPanel.classList.contains("open");
+        const isOpen = resultPanel.classList.contains('open');
         if (!isOpen) {
-          resultPanel.classList.add("open");
-          resultToggle.textContent = "▼ Hide Results";
+          resultPanel.classList.add('open');
+          resultToggle.textContent = '▼ Hide Results';
         }
       }
 
       function closeDrawer() {
-        const isOpen = resultPanel.classList.contains("open");
+        const isOpen = resultPanel.classList.contains('open');
         if (isOpen) {
-          resultPanel.classList.remove("open");
-          resultToggle.textContent = "▲ Show Results";
+          resultPanel.classList.remove('open');
+          resultToggle.textContent = '▲ Show Results';
         }
       }
 
       // --- Search handler ---
-      geocoder.on("result", async (e) => {
+      geocoder.on('result', async (e) => {
         const f = e.result;
         if (!f?.geometry) return;
 
@@ -304,7 +304,7 @@
           rounded[0] === lastSearchCoords[0] &&
           rounded[1] === lastSearchCoords[1]
         ) {
-          console.log("Ignoring duplicate geocoder result");
+          console.log('Ignoring duplicate geocoder result');
           return;
         }
 
@@ -316,14 +316,14 @@
 
         // Update marker
         marker?.remove();
-        marker = new mapboxgl.Marker({ color: "#FF5E00" })
+        marker = new mapboxgl.Marker({ color: '#FF5E00' })
           .setLngLat([lng, lat])
           .addTo(map);
 
         map.flyTo({ center: [lng, lat], zoom: 8 });
 
         const info = await identifyLocation(lng, lat);
-        console.log("Location info:", info);
+        console.log('Location info:', info);
 
         buildUAPopup(info, lng, lat);
 
@@ -338,13 +338,13 @@
 
         try {
           const res = await fetch(SUPABASE_IDENTIFY_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ lng, lat }),
           });
           return await res.json();
         } catch (err) {
-          console.error("Identify failed:", err);
+          console.error('Identify failed:', err);
           return null;
         }
       }

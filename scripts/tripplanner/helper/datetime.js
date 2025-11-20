@@ -1,6 +1,5 @@
 // ---------- Core Conversions ----------
 
-
 // Local → UTC ISO
 function localToUTC(localStr, timeZone) {
   if (!localStr) return '';
@@ -31,9 +30,9 @@ function utcToLocalInput(utcString, timeZone) {
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
-    hour12: false
+    hour12: false,
   }).formatToParts(d);
-  const map = Object.fromEntries(parts.map(p => [p.type, p.value]));
+  const map = Object.fromEntries(parts.map((p) => [p.type, p.value]));
   return `${map.year}-${map.month}-${map.day}T${map.hour}:${map.minute}`;
 }
 
@@ -42,11 +41,17 @@ function getTimezoneOffsetFor(timeZone, date) {
   const fmt = new Intl.DateTimeFormat('en-US', {
     timeZone,
     hour12: false,
-    year: 'numeric', month: '2-digit', day: '2-digit',
-    hour: '2-digit', minute: '2-digit', second: '2-digit'
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
   });
 
-  const parts = Object.fromEntries(fmt.formatToParts(date).map(p => [p.type, p.value]));
+  const parts = Object.fromEntries(
+    fmt.formatToParts(date).map((p) => [p.type, p.value])
+  );
   // Interpret the formatted local time as if it were UTC
   const asUTC = Date.UTC(
     parts.year,
@@ -73,7 +78,7 @@ function fmtDate(utc, tz) {
     hour: 'numeric',
     minute: '2-digit',
     timeZoneName: 'short',
-    hour12: true
+    hour12: true,
   }).format(new Date(utc));
 }
 
@@ -84,28 +89,24 @@ function fmtDay(utcString, timeZone) {
     weekday: 'short',
     year: 'numeric',
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   };
   return new Intl.DateTimeFormat('en-US', opts).format(new Date(utcString));
 }
-
 
 // ---------- Arithmetic ----------
 
 const addMinutes = (utc, minutes) =>
   new Date(new Date(utc).getTime() + minutes * 60000).toISOString();
 
-const addHours = (utc, hours) =>
-  addMinutes(utc, hours * 60);
+const addHours = (utc, hours) => addMinutes(utc, hours * 60);
 
 const durationHours = (startUTC, endUTC) =>
   (new Date(endUTC) - new Date(startUTC)) / 3600000;
 
-const endFromDuration = (startUTC, hours) =>
-  addHours(startUTC, hours);
+const endFromDuration = (startUTC, hours) => addHours(startUTC, hours);
 
-const startFromDuration = (endUTC, hours) =>
-  addHours(endUTC, -hours);
+const startFromDuration = (endUTC, hours) => addHours(endUTC, -hours);
 
 // ---------- Duration Formatting ----------
 

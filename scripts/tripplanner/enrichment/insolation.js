@@ -14,7 +14,7 @@ function phaseFromEventName(name) {
     'dawn',
     'sunrise',
     'sunset',
-    'dusk'
+    'dusk',
   ];
 
   // DAY EVENTS
@@ -23,7 +23,7 @@ function phaseFromEventName(name) {
     'goldenHourEnd',
     'solarNoon',
     'goldenHour',
-    'sunsetStart'
+    'sunsetStart',
   ];
 
   if (NIGHT_EVENTS.includes(name)) return 'night';
@@ -55,7 +55,7 @@ function getSunEventsAroundWindow(start, end, lat, lng) {
     'dusk',
     'nauticalDusk',
     'night',
-    'nadir'
+    'nadir',
   ];
 
   const allEvents = [];
@@ -142,7 +142,7 @@ function computeSegmentInsolation(seg, lat, lng) {
     slices.push({
       start: cursor,
       end: to,
-      phase
+      phase,
     });
     cursor = to;
   }
@@ -301,7 +301,7 @@ function computeDriveInsolation(seg) {
       slices.push({
         start: cursor,
         end: p.dt,
-        phase: lastPhase
+        phase: lastPhase,
       });
       cursor = p.dt;
       lastPhase = phase;
@@ -312,7 +312,7 @@ function computeDriveInsolation(seg) {
   slices.push({
     start: cursor,
     end,
-    phase: lastPhase
+    phase: lastPhase,
   });
 
   return slices;

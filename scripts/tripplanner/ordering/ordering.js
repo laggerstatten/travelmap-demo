@@ -331,7 +331,7 @@ async function movePlacedStopById(stopId, beforeId) {
   let {
     list: afterRemoval,
     prevId,
-    nextId
+    nextId,
   } = removeSegmentFromList(list, stop);
 
   list = afterRemoval;

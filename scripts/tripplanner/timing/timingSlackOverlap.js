@@ -2,7 +2,7 @@
  * UPDATE segments by inserting elements representing slack and overlap
  *
  * @param {*} list
- * @return {*} 
+ * @return {*}
  */
 function computeSlackAndOverlap(list) {
   //console.log('computeSlackAndOverlap');
@@ -62,8 +62,8 @@ function computeSlackAndOverlap(list) {
         slackInfo: {
           tz,
           aLabel,
-          bLabel
-        }
+          bLabel,
+        },
       };
       const insertIndex = segments.findIndex((s) => s.id === next.id);
       segments.splice(insertIndex, 0, slack);
@@ -81,7 +81,7 @@ function computeSlackAndOverlap(list) {
 
       for (const [anchor, role] of [
         [leftAnchor, 'left'],
-        [rightAnchor, 'right']
+        [rightAnchor, 'right'],
       ]) {
         if (anchor?.seg?.id) {
           const s = segments.find((x) => x.id === anchor.seg.id);
@@ -99,7 +99,7 @@ function computeSlackAndOverlap(list) {
                 overlapId: null, // fill in once overlap is created
                 overlapMinutes: overlapMin,
                 overlapHours: (overlapMin / 60).toFixed(2),
-                affectedField: anchor.kind // "start", "end", "duration"
+                affectedField: anchor.kind, // "start", "end", "duration"
               });
             }
           }
@@ -121,8 +121,8 @@ function computeSlackAndOverlap(list) {
           aLabel,
           bLabel,
           leftAnchor,
-          rightAnchor
-        }
+          rightAnchor,
+        },
       };
 
       // backfill overlapId into emitters
@@ -151,30 +151,18 @@ function computeSlackAndOverlap(list) {
  * UPDATE segments by removing elements representing slack and overlap
  *
  * @param {*} list
- * @return {*} 
+ * @return {*}
  */
 function removeSlackAndOverlap(list) {
   //console.log('removeSlackAndOverlap');
   let segments = [...list];
 
   // Build a working copy excluding derived types
-  const baseSegments = segments.filter(  // check for missing type
+  const baseSegments = segments.filter(
+    // check for missing type
     (s) => s.type !== 'slack' && s.type !== 'overlap'
   );
 
   //console.log('Segments after recompute:', baseSegments);
   return baseSegments;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
